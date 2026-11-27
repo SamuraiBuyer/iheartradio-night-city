@@ -1,0 +1,15 @@
+# release zips and build output (package.ps1 / build.bat make them)
+*.zip
+src/plugin/build/
+src/manager/build/
+red4ext/plugins/iHeartRadio/iHeartRadio.dll
+bin/x64/plugins/cyber_engine_tweaks/mods/iHeartRadio/StationManager/
+
+# written on the player's PC
+archive/
+bin/x64/plugins/cyber_engine_tweaks/mods/iHeartRadio/data/*
+!bin/x64/plugins/cyber_engine_tweaks/mods/iHeartRadio/data/.keep
+bin/x64/plugins/cyber_engine_tweaks/mods/radioExt/
+*.log
+NUL
+__pycache__/

@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>iHeart Radio Station Manager</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="scan"></div>
+<div class="vignette"></div>
+
+<header class="top">
+  <div class="brand">
+    <div class="brand-mark" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+    <div>
+      <div class="micro">NCPD_RADIO_NET // TRN_TCLAS_IHR_01</div>
+      <h1 class="glitch" data-text="IHEART RADIO">IHEART RADIO</h1>
+      <div class="sub">STATION MANAGER <span class="ver" id="ver"></span></div>
+    </div>
+  </div>
+  <div class="chips" id="chips"></div>
+</header>
+
+<div class="banners" id="banners"></div>
+
+<main class="layout">
+  <!-- left: the stations in the game, like the radioport list -->
+  <section class="panel list-panel">
+    <div class="panel-head">
+      <span class="tab">RADIOPORT</span>
+      <span class="count" id="count">0 STATIONS</span>
+    </div>
+    <div class="station-list" id="stationList"></div>
+    <button class="btn btn-yellow add-btn" id="addBtn"><span class="plus">+</span> ADD STATION</button>
+  </section>
+
+  <!-- right: search / setup -->
+  <section class="panel work-panel">
+    <!-- search -->
+    <div class="view" id="viewSearch">
+      <div class="panel-head">
+        <span class="tab">FIND A STATION</span>
+        <span class="micro right">SOURCE: IHEARTRADIO.COM</span>
+      </div>
+      <form class="search" id="searchForm" autocomplete="off">
+        <div class="search-box">
+          <svg viewBox="0 0 24 24" class="search-ico"><circle cx="10" cy="10" r="6.5"/><path d="M15 15l6 6"/></svg>
+          <input id="searchInput" placeholder="CALL LETTERS, STATION NAME, CITY OR FREQUENCY" spellcheck="false">
+          <button class="btn btn-red" type="submit">SEARCH</button>
+        </div>
+        <div class="hint">e.g. <a data-q="Z100">Z100</a> · <a data-q="102.7 KIIS FM">102.7 KIIS FM</a> · <a data-q="New York rock">NEW YORK ROCK</a> · <a data-q="Power 105.1">POWER 105.1</a></div>
+      </form>
+      <div class="results" id="results">
+        <div class="empty">
+          <div class="empty-title">TUNE IN TO NIGHT CITY</div>
+          <div class="empty-text">Search for any station on iHeartRadio. The logo, name, frequency and stream are set up for you,
+            and the logo is redrawn in the style of the game's own stations.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- setup / edit -->
+    <div class="view hidden" id="viewSetup">
+      <div class="panel-head">
+        <button class="back" id="backBtn" title="Back (Esc)">&lsaquo; BACK</button>
+        <span class="tab" id="setupTitle">NEW STATION</span>
+        <span class="micro right" id="setupMeta"></span>
+      </div>
+      <div class="setup">
+        <!-- preview like the in-game radioport -->
+        <div class="radioport">
+          <div class="rp-head"><span>RADIOPORT</span></div>
+          <div class="rp-body">
+            <div class="rp-art">
+              <canvas id="previewCanvas" width="512" height="512"></canvas>
+              <div class="rp-art-meta">IMAGE NAME: <span id="artName">-</span><br>IMAGE TYPE: ROOT NODE<br>(LZ COMPRESSED)<br>LOAD ADDRESS: 00000000</div>
+              <div class="busy hidden" id="logoBusy"><div class="spinner"></div>PROCESSING LOGO</div>
+            </div>
+            <div class="rp-info">
+              <div class="rp-label">NOW PLAYING</div>
+              <div class="rp-name" id="rpName">-</div>
+              <div class="rp-track" id="rpTrack">ARTIST - SONG ON AIR</div>
+              <div class="rp-vol"><span>VOLUME</span><span class="key">A</span><span id="rpVol">100%</span><span class="key">D</span></div>
+            </div>
+          </div>
+          <div class="rp-list" id="rpList"></div>
+        </div>
+
+        <div class="fields">
+          <label class="field">
+            <span class="field-label">STATION NAME <em>shown in the game</em></span>
+            <input id="fName" maxlength="40" spellcheck="false">
+          </label>
+          <div class="field-row">
+            <label class="field">
+              <span class="field-label">FREQUENCY</span>
+              <input id="fFm" type="number" step="0.1" min="0" max="2000">
+            </label>
+            <label class="field grow">
+              <span class="field-label">VOLUME <em id="volText">100%</em></span>
+              <input id="fVol" type="range" min="0.2" max="1.5" step="0.05" value="1">
+            </label>
+          </div>
+
+          <div class="field">
+            <span class="field-label">LOGO STYLE <em>pick the one that reads best</em></span>
+            <div class="styles" id="styles"></div>
+            <div class="logo-tools">
+              <label class="mini">LINE GAP <input id="fGap" type="range" min="0" max="10" step="1" value="3"></label>
+              <label class="toggle"><input type="checkbox" id="fInvert"><span></span> INVERT</label>
+              <button class="btn btn-ghost small" id="ownImage">USE MY OWN IMAGE</button>
+              <button class="btn btn-ghost small" id="noLogo">NO LOGO</button>
+              <input type="file" id="fileInput" accept="image/png,image/jpeg,image/webp,image/gif" hidden>
+            </div>
+          </div>
+
+          <div class="actions">
+            <button class="btn btn-yellow big" id="saveBtn">INSTALL STATION</button>
+            <button class="btn btn-danger" id="removeBtn">REMOVE</button>
+          </div>
+          <div class="fine" id="setupFine"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="bottom">
+  <div class="keys">
+    <span><span class="key">ENTER</span> SEARCH</span>
+    <span><span class="key">ESC</span> BACK</span>
+    <span><span class="key">F5</span> REFRESH</span>
+  </div>
+  <div class="foot-status" id="footStatus">READY</div>
+  <button class="link-danger" id="removeAll" title="Before uninstalling the mod: removes every station this manager added">REMOVE ALL STATIONS</button>
+  <div class="micro">NOT AFFILIATED WITH IHEARTMEDIA OR CD PROJEKT RED</div>
+</footer>
+
+<div class="toast hidden" id="toast"><div class="toast-title" id="toastTitle"></div><div class="toast-text" id="toastText"></div></div>
+
+<div class="modal hidden" id="modal">
+  <div class="modal-box">
+    <div class="modal-title" id="modalTitle"></div>
+    <div class="modal-text" id="modalText"></div>
+    <div class="modal-actions" id="modalActions"></div>
+  </div>
+</div>
+
+<script src="logo-core.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
