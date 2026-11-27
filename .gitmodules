@@ -1,3 +1,18 @@
 [submodule "src/plugin/vendor/RED4ext.SDK"]
 	path = src/plugin/vendor/RED4ext.SDK
 	url = https://github.com/wopss/RED4ext.SDK
+[submodule "src/plugin/vendor/fdk-aac"]
+	path = src/plugin/vendor/fdk-aac
+	url = https://github.com/mstorsjo/fdk-aac
+[submodule "src/plugin/vendor/ogg"]
+	path = src/plugin/vendor/ogg
+	url = https://github.com/xiph/ogg
+[submodule "src/plugin/vendor/vorbis"]
+	path = src/plugin/vendor/vorbis
+	url = https://github.com/xiph/vorbis
+[submodule "src/plugin/vendor/minimp3"]
+	path = src/plugin/vendor/minimp3
+	url = https://github.com/lieff/minimp3
+[submodule "src/plugin/vendor/stb"]
+	path = src/plugin/vendor/stb
+	url = https://github.com/nothings/stb

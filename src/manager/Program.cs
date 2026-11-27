@@ -186,7 +186,6 @@ namespace IHeartRadioManager
                 case "remove": return backend.Remove(s("id"));
                 case "removeAll": return backend.RemoveAll();
                 case "applyLogos": return backend.ApplyLogos();
-                case "installFfmpeg": return backend.InstallFfmpeg();
                 case "open": return backend.Open(s("what"));
                 default: throw new Exception("unknown method " + method);
             }

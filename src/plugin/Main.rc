@@ -1,8 +1,13 @@
 #include <winver.h>
+#include "Resources.h"
+
+// logo templates (built once with WolvenKit, see src/manager/templates)
+IDR_XBM_TEMPLATE RCDATA "../manager/templates/iheart_00000000.xbm.main"
+IDR_ATLAS_TEMPLATE RCDATA "../manager/templates/iheart_00000000.inkatlas"
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 2,0,4,0
- PRODUCTVERSION 2,0,4,0
+ FILEVERSION 2,1,0,0
+ PRODUCTVERSION 2,1,0,0
  FILEFLAGSMASK VS_FFI_FILEFLAGSMASK
  FILEFLAGS 0
  FILEOS VOS_NT_WINDOWS32
@@ -14,11 +19,11 @@ BEGIN
         BLOCK "040904b0"
         BEGIN
             VALUE "FileDescription", "iHeart Radio - RED4ext plugin for Cyberpunk 2077 (plays iHeartRadio stations through RadioExt)"
-            VALUE "FileVersion", "2.0.4.0"
+            VALUE "FileVersion", "2.1.0.0"
             VALUE "InternalName", "iHeartRadio"
             VALUE "OriginalFilename", "iHeartRadio.dll"
             VALUE "ProductName", "iHeart Radio for Cyberpunk 2077 (fan mod, not affiliated with iHeartMedia or CD PROJEKT RED)"
-            VALUE "ProductVersion", "2.0.4.0"
+            VALUE "ProductVersion", "2.1.0.0"
             VALUE "LegalCopyright", "Free fan mod"
         END
     END

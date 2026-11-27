@@ -1,4 +1,4 @@
--- iHeart Radio (CET part): shows the song on air on iHeart stations.
+-- iHeart Radio (CET part): the station manager in the CET overlay (menu.lua), and the song on air on iHeart stations.
 --
 -- The bridge (red4ext\plugins\iHeartRadio\iHeartRadio.dll) reads the song titles sent inside each stream the game
 -- listens to and writes them to data/nowplaying.txt, one line per station:  <id> TAB <artist> TAB <title>
@@ -7,6 +7,16 @@
 -- RadioExt shows a stream station's "currentSong.path" as its track (radio menu NOW PLAYING, song toast in the car),
 -- and for streams it is only used for that. So we put "Artist - Title" there, or the station name between songs,
 -- and send the game's own "radio song changed" event so the open radio menu and the car HUD refresh.
+
+-- Which download this is: true = "In-game Station Manager" (the CET overlay, menu.lua), false = "for the Station
+-- Manager app" (no overlay at all, even if a menu.lua from the other download is still around). package.ps1 sets it.
+local IN_GAME_MANAGER = true
+
+local menu = { open = function() end, close = function() end, draw = function() end, update = function() end }
+if IN_GAME_MANAGER then
+    local ok, loaded = pcall(require, "menu")
+    if ok and type(loaded) == "table" then menu = loaded end
+end
 
 local NOW_FILE = "data/nowplaying.txt"
 local READ_EVERY = 2.0      -- seconds; the bridge itself updates every 10 s
@@ -38,7 +48,7 @@ local function trackText(e)
     return e.title
 end
 
--- iHeart station id of a RadioExt station, from its bridge URL (http://127.0.0.1:8925/zc1469.mp3)
+-- iHeart station id of a RadioExt station, from its bridge URL (http://127.0.0.1:8925/zc1469.ogg)
 local function stationId(radio)
     local ok, url = pcall(function() return radio.metadata.streamInfo.streamURL end)
     if not ok or type(url) ~= "string" then return nil end
@@ -83,7 +93,12 @@ registerForEvent("onInit", function()
     end)
 end)
 
+registerForEvent("onOverlayOpen", function() menu.open() end)
+registerForEvent("onOverlayClose", function() menu.close() end)
+registerForEvent("onDraw", function() menu.draw() end)
+
 registerForEvent("onUpdate", function(dt)
+    menu.update()
     timer = timer + dt
     if timer < READ_EVERY then return end
     timer = 0

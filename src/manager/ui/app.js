@@ -139,7 +139,6 @@ async function refreshStatus() {
     chips += chip("RADIOEXT", st.radioExt ? "ok" : "bad", "RadioExt (required)");
     chips += chip("BRIDGE", st.plugin ? "ok" : "bad", "iHeart Radio's RED4ext plugin");
   }
-  chips += chip("FFMPEG", st.ffmpeg ? "ok" : "bad", st.ffmpeg || "needed to play iHeart streams");
   chips += chip(st.gameRunning ? "GAME RUNNING" : "GAME CLOSED", st.gameRunning ? "warn" : "", "");
   $("chips").innerHTML = chips;
 
@@ -150,7 +149,6 @@ async function refreshStatus() {
     if (!st.radioExt) b += `<div class="banner"><b>RADIOEXT MISSING</b><span>The stations play through RadioExt. Install it with your mod manager.</span><button class="btn small" data-act="radioext">GET RADIOEXT</button></div>`;
     if (!st.plugin) b += `<div class="banner"><b>BRIDGE MISSING</b><span>red4ext\\plugins\\iHeartRadio is not installed - reinstall the iHeart Radio mod.</span></div>`;
   }
-  if (!st.ffmpeg) b += `<div class="banner"><b>FFMPEG MISSING</b><span>The free tool that converts iHeart's audio for the game.</span><button class="btn btn-red small" data-act="ffmpeg">INSTALL FFMPEG</button></div>`;
   if (st.pendingLogos) b += `<div class="banner warn"><b>LOGOS WAITING</b><span>The game had the logo file open. They'll be applied as soon as the game is closed.</span><button class="btn small" data-act="apply">APPLY NOW</button></div>`;
   else if (st.gameRunning) b += `<div class="banner info"><b>GAME RUNNING</b><span>You can still add and edit stations: they show up the next time you start the game.</span></div>`;
   $("banners").innerHTML = b;
@@ -171,14 +169,7 @@ document.addEventListener("click", async (e) => {
   if (a === "browse") {
     try { await rpc("browseGame"); await refreshStatus(); await loadStations(); } catch (err) { toast("NOT THE GAME FOLDER", err.message, true); }
   } else if (a === "radioext") rpc("open", { what: "https://www.nexusmods.com/cyberpunk2077/mods/4591" });
-  else if (a === "ffmpeg") {
-    act.disabled = true; act.textContent = "INSTALLING...";
-    footer("INSTALLING FFMPEG - THIS CAN TAKE A MINUTE");
-    try { await rpc("installFfmpeg"); toast("FFMPEG INSTALLED", "iHeart streams can now play in the game."); }
-    catch (err) { toast("FFMPEG NOT INSTALLED", err.message, true); }
-    footer("READY");
-    refreshStatus();
-  } else if (a === "apply") {
+  else if (a === "apply") {
     const r = await rpc("applyLogos").catch((err) => ({ error: err.message }));
     if (r.logosApplied) toast("LOGOS APPLIED", "Start the game to see them.");
     else toast("CLOSE THE GAME FIRST", "Cyberpunk 2077 keeps the logo file open while it runs.", true);

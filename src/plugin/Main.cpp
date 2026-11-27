@@ -1,10 +1,12 @@
 // iHeart Radio - RED4ext plugin
 //
-// Runs the local MP3 bridge (Bridge.cpp) inside the game when it starts, so RadioExt can play iHeart stations from
+// Runs the local stream bridge (Bridge.cpp) inside the game when it starts, so RadioExt can play iHeart stations from
 // http://127.0.0.1:8925/zc<id>.mp3 without the player running anything by hand. No separate program: the bridge
 // lives and ends with the game.
 
 #include "Bridge.hpp"
+#include "Script.hpp"
+#include "Stations.hpp"
 
 #include <RED4ext/Common.hpp>
 #include <RED4ext/Api/ApiVersion.hpp>
@@ -70,6 +72,18 @@ RED4EXT_C_EXPORT bool RED4EXT_CALL Main(RED4ext::v1::PluginHandle aHandle, RED4e
     {
     case RED4ext::v1::EMainReason::Load:
         StartBridge(aSdk, aHandle);
+        // the in-game station manager (CET menu): logos saved last session go in before the game reads its archives
+        try
+        {
+            const auto dir = PluginDir();
+            if (!dir.empty())
+                Stations::Init(dir.parent_path().parent_path().parent_path());
+        }
+        catch (...)
+        {
+            aSdk->logger->Error(aHandle, "station manager: could not check the station logos");
+        }
+        Script::Register();
         break;
     case RED4ext::v1::EMainReason::Unload:
         Bridge::Stop();
@@ -82,7 +96,7 @@ RED4EXT_C_EXPORT void RED4EXT_CALL Query(RED4ext::v1::PluginInfo* aInfo)
 {
     aInfo->name = L"iHeart Radio";
     aInfo->author = L"iHeart Radio mod";
-    aInfo->version = RED4EXT_V1_SEMVER(2, 0, 4);
+    aInfo->version = RED4EXT_V1_SEMVER(2, 1, 0);
     aInfo->runtime = RED4EXT_V1_RUNTIME_VERSION_INDEPENDENT;
     aInfo->sdk = RED4EXT_V1_SDK_VERSION_CURRENT;
 }

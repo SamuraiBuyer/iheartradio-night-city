@@ -3,6 +3,7 @@
 src/plugin/build/
 src/manager/build/
 red4ext/plugins/iHeartRadio/iHeartRadio.dll
+red4ext/plugins/iHeartRadio/THIRD-PARTY-NOTICES.txt
 bin/x64/plugins/cyber_engine_tweaks/mods/iHeartRadio/StationManager/
 
 # written on the player's PC

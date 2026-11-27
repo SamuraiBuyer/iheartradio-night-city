@@ -15,7 +15,7 @@ namespace IHeartRadioManager
 {
     public class Backend
     {
-        public const string Version = "2.0.4";
+        public const string Version = "2.1.0";
         const int BridgePort = 8925;
         static readonly JavaScriptSerializer Json = new JavaScriptSerializer { MaxJsonLength = int.MaxValue };
 
@@ -104,7 +104,6 @@ namespace IHeartRadioManager
                 { "gameDir", GameDir },
                 { "gameFound", found },
                 { "gameRunning", Process.GetProcessesByName("Cyberpunk2077").Length > 0 },
-                { "ffmpeg", FindFfmpeg() },
             };
             if (found)
             {
@@ -115,52 +114,6 @@ namespace IHeartRadioManager
                 st["pendingLogos"] = File.Exists(PendingFlag) || LogosOutdated();
             }
             return st;
-        }
-
-        string FindFfmpeg()
-        {
-            var dirs = new List<string>();
-            if (GameDir != null) dirs.Add(Path.Combine(GameDir, @"red4ext\plugins\iHeartRadio"));
-            foreach (var scope in new[] { EnvironmentVariableTarget.Process, EnvironmentVariableTarget.User, EnvironmentVariableTarget.Machine })
-            {
-                var p = Environment.GetEnvironmentVariable("Path", scope);
-                if (p != null) dirs.AddRange(p.Split(';').Where(x => x.Trim().Length > 0).Select(x => Environment.ExpandEnvironmentVariables(x.Trim())));
-            }
-            var local = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-            dirs.Add(Path.Combine(local, @"Microsoft\WinGet\Links"));
-            dirs.Add(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), @"scoop\shims"));
-            dirs.Add(@"C:\ProgramData\chocolatey\bin");
-            dirs.Add(@"C:\ffmpeg\bin");
-            foreach (var d in dirs)
-            {
-                try { var f = Path.Combine(d, "ffmpeg.exe"); if (File.Exists(f)) return f; } catch { }
-            }
-            try
-            {
-                var pk = Path.Combine(local, @"Microsoft\WinGet\Packages");
-                if (Directory.Exists(pk))
-                    foreach (var d in Directory.GetDirectories(pk, "*FFmpeg*"))
-                    {
-                        var f = Directory.GetFiles(d, "ffmpeg.exe", SearchOption.AllDirectories).FirstOrDefault();
-                        if (f != null) return f;
-                    }
-            }
-            catch { }
-            return null;
-        }
-
-        public object InstallFfmpeg()
-        {
-            var psi = new ProcessStartInfo("winget", "install -e --id Gyan.FFmpeg --accept-package-agreements --accept-source-agreements")
-            { UseShellExecute = false, CreateNoWindow = true, RedirectStandardOutput = true, RedirectStandardError = true };
-            Process p;
-            try { p = Process.Start(psi); }
-            catch { throw new Exception("winget isn't available on this PC. Download ffmpeg from https://www.gyan.dev/ffmpeg/builds/ and put ffmpeg.exe in red4ext\\plugins\\iHeartRadio."); }
-            string output = p.StandardOutput.ReadToEnd();
-            p.WaitForExit();
-            var path = FindFfmpeg();
-            if (path == null) throw new Exception("ffmpeg could not be installed (winget exit code " + p.ExitCode + ").");
-            return Status();
         }
 
         // ---------------------------------------------------------------- iHeart
@@ -319,7 +272,7 @@ namespace IHeartRadioManager
             Directory.CreateDirectory(folder);
             bool hasLogo = File.Exists(logoFile);
             WriteMetadata(Path.Combine(folder, "metadata.json"), name, fm, vol, hasLogo ? long.Parse(id) : -1,
-                          "http://127.0.0.1:" + BridgePort + "/zc" + id + ".mp3");
+                          "http://127.0.0.1:" + BridgePort + "/zc" + id + ".ogg");   // the plugin sends Ogg Vorbis
             return ApplyLogos();
         }
 
