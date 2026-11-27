@@ -7,8 +7,9 @@ Output, with bin\ and red4ext\ like the game folder (the logo archive in archive
 Manager on the player's PC):
   "iHeart Radio <version>.zip"                          everything
   "iHeart Radio <version> (no Station Manager).zip"     the mod without the app
-  "iHeart Radio Station Manager <version>.zip"          the app on its own, same game-folder layout, so Vortex / MO2
-                                                        install it into the game like a mod
+  "iHeart Radio Station Manager <version>.zip"          the app on its own, in an "iHeart Radio Station Manager"
+                                                        folder: unzip anywhere and run (not a Vortex mod - Vortex's
+                                                        Cyberpunk installer only accepts .dll files in RED4ext plugins)
 #>
 $ErrorActionPreference = "Stop"
 $root = $PSScriptRoot
@@ -38,9 +39,15 @@ Push-Location $root
 try {
     & $tar -a -c -f $full @skip bin red4ext
     & $tar -a -c -f $core @skip --exclude "StationManager" bin red4ext
-    & $tar -a -c -f $app "bin/x64/plugins/cyber_engine_tweaks/mods/iHeartRadio/StationManager"
 }
 finally { Pop-Location }
+$stage = Join-Path $env:TEMP "iheart-app-zip"
+if (Test-Path $stage) { Remove-Item $stage -Recurse -Force }
+New-Item -ItemType Directory $stage | Out-Null
+Copy-Item "$root\src\manager\build\StationManager" "$stage\iHeart Radio Station Manager" -Recurse
+Push-Location $stage
+try { & $tar -a -c -f $app "iHeart Radio Station Manager" }
+finally { Pop-Location; Remove-Item $stage -Recurse -Force }
 foreach ($z in $full, $core, $app) {
     Write-Host "-> $z"
     & $tar -t -f $z | Where-Object { $_ -notmatch '/$' } | ForEach-Object { "     $_" }

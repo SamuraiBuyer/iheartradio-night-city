@@ -10,12 +10,17 @@ The mod itself is on Nexus Mods: search for **iHeartRadio - Real Stations in Nig
 
 Get **`iHeart Radio Station Manager <version>.zip`** from [Releases](../../releases/latest).
 
+The Station Manager is a standalone app, not a mod: don't install it with Vortex.
+
 1. Install the mod from Nexus Mods first (it needs Cyber Engine Tweaks, RED4ext and RadioExt).
-2. Install the Station Manager zip like a mod: drag it onto the **Mods** page in Vortex and enable it
-   (MO2: *Install a new mod from an archive*; manual: copy its `bin` folder into your Cyberpunk 2077 folder).
-3. Run `Cyberpunk 2077\bin\x64\plugins\cyber_engine_tweaks\mods\iHeartRadio\StationManager\iHeartRadioManager.exe`.
-   Tip: add it as a tool in Vortex (Dashboard > Add Tool).
-4. Click **ADD STATION**, search for a station, pick it and click **INSTALL STATION**. Start the game and tune in.
+2. Download the Station Manager zip, right-click it > **Extract All**, and extract it anywhere (for example your
+   Documents folder).
+3. Open the **iHeart Radio Station Manager** folder and run `iHeartRadioManager.exe`. If Windows says
+   *"Windows protected your PC"*, click **More info > Run anyway** (that shows for new apps that aren't code-signed).
+4. It finds Cyberpunk 2077 through Steam, GOG or Epic. If it can't, click **SELECT FOLDER** and pick the game folder.
+5. Click **ADD STATION**, search for a station, pick it and click **INSTALL STATION**. Start the game and tune in.
+
+Tip: in Vortex you can add it under *Dashboard > Add Tool* to start it from there.
 
 Needs Windows 10 or 11 with the Microsoft Edge WebView2 Runtime (already part of Windows 11). The app can install
 ffmpeg for you, which the mod uses to play the stations.

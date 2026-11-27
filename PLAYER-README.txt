@@ -12,12 +12,16 @@ REQUIREMENTS
 - Internet connection while playing
 
 INSTALL
-Vortex / MO2: install "iHeart Radio 2.0.4.zip" like any other mod.
+Vortex / MO2: install the mod's zip from Nexus Mods like any other mod.
 Manual: copy the "bin" and "red4ext" folders into your Cyberpunk 2077 folder.
 
 ADD YOUR STATIONS - STATION MANAGER
-Run  bin\x64\plugins\cyber_engine_tweaks\mods\iHeartRadio\StationManager\iHeartRadioManager.exe
-  Vortex: Dashboard > Add Tool > pick that file, so it starts from Vortex.  MO2: add it as an executable.
+The Station Manager is a standalone app (not a mod), downloaded separately:
+  https://github.com/SamuraiBuyer/iheartradio-night-city/releases/latest
+Extract the zip anywhere (e.g. Documents) and run "iHeart Radio Station Manager\iHeartRadioManager.exe".
+If Windows shows "Windows protected your PC": More info > Run anyway (new apps that aren't code-signed).
+It finds the game through Steam, GOG or Epic; otherwise click SELECT FOLDER and pick the Cyberpunk 2077 folder.
+  Vortex: Dashboard > Add Tool > pick the exe, so it starts from Vortex.  MO2: add it as an executable.
 1. ADD STATION, search by call letters, name, city or frequency (Z100, "102.7 KIIS FM", "New York rock").
 2. Click the station. Name ("100.3 Z100"), frequency, stream and logo are filled in. The logo is converted
    automatically; pick another LOGO STYLE if one reads better, change LINE GAP / INVERT, or USE MY OWN IMAGE.
